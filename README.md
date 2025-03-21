@@ -1,6 +1,6 @@
-# Sistema de Punto de Venta CDP Lite
+# DevSync
 
-El sistema de punto de venta CDP Lite es una aplicación web basada en el lenguaje PHP y MySQL con la cual puedes mantener el control de inventario y venta de productos en una tienda. Este proyecto fue desarrollado utilizando CodeIgniter 4.
+El sistema de Ventas para Devsync esta desarrollado en el lenguaje PHP y MySQL, puedes mantener el control de inventario y venta. Este proyecto fue desarrollado utilizando CodeIgniter 4.
 
 El sistema cuenta con un catalogo de productos, módulo de caja, ventas y reportes.
 
