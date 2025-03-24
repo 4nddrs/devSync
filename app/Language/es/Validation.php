@@ -53,7 +53,7 @@ return [
     'string'                => 'El campo {field} debe ser una cadena válida.',
     'timezone'              => 'El campo {field} debe ser una zona horaria válida.',
     'valid_base64'          => 'El campo {field} debe ser una cadena base64 válida.',
-    'valid_email'           => 'El campo {field} debe contener una dirección de email válida.',
+    'valid_email'           => 'El campo {field} debe contener una direccion de email válida.',
     'valid_emails'          => 'El campo {field} debe contener todas las direcciones de email válidas.',
     'valid_ip'              => 'El campo {field} debe contener una IP válida.',
     'valid_url'             => 'El campo {field} debe contener una URL válida.',

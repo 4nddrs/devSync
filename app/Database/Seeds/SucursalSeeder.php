@@ -9,11 +9,11 @@ class SucursalSeeder extends Seeder
     public function run()
     {
         $data = [
-            'numero' => '000000000',
-            'nombre' => 'Vida Informático',
-            'correo' => 'correo@gmail.com',
-            'telefono' => '999999999',
-            'direccion' => 'Tu Dirección',
+            'numero' => '666-1940-0911',
+            'nombre' => 'DevSync',
+            'correo' => 'papunico@gmail.com',
+            'telefono' => '62650020',
+            'direccion' => 'Cbba-Cochabamba',
             'mensaje' => 'Gracias por la compra',
             'folio_venta' => '0000000001',
             'activo' => 1

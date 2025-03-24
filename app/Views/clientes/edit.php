@@ -48,8 +48,11 @@ $this->section('contentido');
     </div>
 
     <div class="col-md-4">
-        <label for="direccion"><span class="text-danger">*</span> Dirección</label>
-        <textarea id="direccion" class="form-control" name="direccion" rows="3" placeholder="Dirección"><?= set_value('direccion', $cliente['direccion']); ?></textarea>
+        <label for="direccion"><span class="text-danger">*</span> Gmail</label>
+        <input type="email" id="direccion" class="form-control" name="direccion" 
+       placeholder="Correo Gmail" pattern="[a-zA-Z0-9._%+-]+@gmail\.com"
+       value="<?= set_value('direccion', $cliente['direccion']); ?>" required>
+
     </div>
 
     <div class="text-end">

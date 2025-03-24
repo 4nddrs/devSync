@@ -13,6 +13,9 @@ use Exception;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use PHPMailer\PHPMailer\PHPMailer;
+
+require 'C:/xampp/htdocs/devSync/vendor/autoload.php';
 
 class Ventas extends BaseController
 {
@@ -169,7 +172,7 @@ class Ventas extends BaseController
         $pdf->Cell(60, 4, mb_convert_encoding('Nº ticket:  ', 'ISO-8859-1', 'UTF-8') . $datosVenta['folio'], 0, 1, 'L');
         $pdf->Cell(60, 4, mb_convert_encoding('Cliente:  ', 'ISO-8859-1', 'UTF-8') . $datosVenta['nombre'] . ' ' . $datosVenta['apellido'], 0, 1, 'L');
         $pdf->Cell(60, 4, mb_convert_encoding('Teléfono:  ', 'ISO-8859-1', 'UTF-8') . $datosVenta['telefono'], 0, 1, 'L');
-        $pdf->Cell(60, 4, mb_convert_encoding('Dirección:  ', 'ISO-8859-1', 'UTF-8') . $datosVenta['direccion'], 0, 1, 'L');
+        $pdf->Cell(60, 4, mb_convert_encoding('Gmail:  ', 'ISO-8859-1', 'UTF-8') . $datosVenta['direccion'], 0, 1, 'L');
 
         $pdf->Cell(60, 4, '=========================================', 0, 1, 'L');
 
@@ -221,6 +224,30 @@ class Ventas extends BaseController
 
         $this->response->setHeader('Content-Type', 'application/pdf');
         $pdf->Output("Ticket.pdf", 'I');
+        
+
+        $pdfOutput = $pdf->Output('S');
+
+        if (empty($pdfOutput)) {
+            echo "<script>alert('Error al generar el PDF.');</script>";
+            return;
+        }
+
+         // Llamar al método enviarCorreo y pasar el PDF generado en memoria
+        $destinatario = $datosVenta['direccion']; // Correo del cliente
+        $asunto = "Factura Electrónica - " . $empresa['nombre'];
+        $mensaje = "Estimado " . $datosVenta['nombre'] . " " . $datosVenta['apellido'] . ",\n\n";
+        $mensaje .= "Adjunto encontrará su factura por la compra realizada.\n\n";
+        $mensaje .= "Total: " . env('SIMMONEY') . $total . "\n\n";
+        $mensaje .= "Gracias por su preferencia.\n\n";
+        $mensaje .= $empresa['mensaje'];
+
+        // Enviar el correo con el archivo PDF generado en memoria
+        $resultado = $this->enviarCorreo($destinatario, $asunto, $mensaje, $pdfOutput);
+
+        // Mostrar una notificación en el servidor o en el cliente
+        echo "<script>alert('$resultado');</script>";
+
     }
 
     // Cancela venta
@@ -233,6 +260,43 @@ class Ventas extends BaseController
         return redirect()->to(base_url('ventas'));
     }
 
+    public function enviarCorreo($destinatario, $asunto, $mensaje, $archivoAdjunto = null) {
+        $mail = new PHPMailer(true);
+        
+        try {
+            // Configuración del servidor SMTP de Gmail
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = '4nddrs19@gmail.com'; // Tu correo Gmail
+            $mail->Password   = 'tdfmebbickzeqqga'; // Tu contraseña o App Password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            // Configurar el remitente y destinatario
+            $mail->setFrom('4nddrs19@gmail.com', 'DevSync');
+            $mail->addAddress($destinatario);
+
+            // Configurar el contenido del correo
+            $mail->Subject = $asunto;
+            $mail->Body    = $mensaje;
+            $mail->AltBody = strip_tags($mensaje); // Versión en texto plano
+
+            // Adjuntar archivo si se proporciona
+            if ($archivoAdjunto) {
+                // Agregar el archivo en memoria como adjunto
+                $mail->addStringAttachment($archivoAdjunto, 'factura.pdf', 'base64', 'application/pdf');
+            }
+
+            // Enviar el correo
+            $mail->send();
+            return "✅ Correo enviado correctamente a $destinatario";
+        } catch (Exception $e) {
+            return "❌ Error al enviar el correo: {$mail->ErrorInfo}";
+        }
+    }
+
+    
     //IMPRESIÓN DIRECTA
     public function impresionDirecta($idVenta)
     {
@@ -262,7 +326,7 @@ class Ventas extends BaseController
         $printer->text("Cliente: " . $datosVenta['nombre'] . " " . $datosVenta['apellido'] . "\n");
         $printer->text("Identidad: " . $datosVenta['identidad'] . "\n");
         $printer->text("Teléfono: " . $datosVenta['telefono'] . "\n");
-        $printer->text("Dirección: " . $datosVenta['direccion'] . "\n");
+        $printer->text("Gmail: " . $datosVenta['direccion'] . "\n");
 
         $printer->text("\nProductos:\n");
         $total = 0;
@@ -285,5 +349,7 @@ class Ventas extends BaseController
         $printer->cut();
         $printer->pulse();
         $printer->close();
+
     }
+
 }

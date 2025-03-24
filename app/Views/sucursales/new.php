@@ -51,8 +51,8 @@ $this->section('contentido');
     </div>
 
     <div class="col-md-6">
-        <label for="direccion"><span class="text-danger">*</span> Dirección</label>
-        <textarea id="direccion" class="form-control" name="direccion" rows="2" placeholder="Dirección"></textarea>
+        <label for="direccion"><span class="text-danger">*</span> Gmail</label>
+        <textarea id="direccion" class="form-control" name="direccion" rows="2" placeholder="Gmail"></textarea>
     </div>
 
     <div class="col-md-6">
